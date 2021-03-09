@@ -10,7 +10,7 @@ vc140.pdb
 x64/
 obj/
 .idea/
-CMakeLists.txt
 VanitySearch
 cmake-build-debug/
 *.prf
+build_host
