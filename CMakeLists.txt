@@ -9,7 +9,12 @@ enable_language("CUDA")
 
 add_definitions(-DWITHGPU)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -mssse3 -Wno-write-strings -O2")
+if(MSVC)
+    add_definitions(-DWIN64)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSSE3 /O2")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -mssse3 -Wno-write-strings -O2")
+endif()
 
 set(VANITY_SEARCH_SOURCES
         Base58.cpp
@@ -41,6 +46,12 @@ add_executable(${PROJECT_NAME}
 set_target_properties(${PROJECT_NAME}
         PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 
+if (MSVC)
+        set(PTHREAD_LIB)
+else()
+        set(PTHREAD_LIB pthread)
+endif()
+
 target_link_libraries(${PROJECT_NAME}
-        pthread
+        ${PTHREAD_LIB}
         ${CUDA_LIBS})
